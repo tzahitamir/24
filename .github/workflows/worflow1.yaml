@@ -10,7 +10,28 @@ jobs:
           run: echo "Welcome to the first step"     
 
         - name: list files
-          run: ls
+          run: |
+            ls
+            cat 1 >> 2.txt
 
-        - name: read file
-          run: cat 1
+        #This step will upload 2.txt artifact, to be used at a later stage opssible by "second_job" that runs on a different vm
+        - name: Upload 2.txt file
+          uses: actions/upload-artifact@v3
+          with:
+            name: 2.txt-file
+            path: 2.txt
+
+    second_job: 
+        #needs command - will wait for successful execution of the mentiones step       
+        needs: first_job   
+        runs-on: ubuntu-latest
+        steps:
+        - name: print a welcome message
+          run: echo "Second step" 
+
+        # Download an artifact that was generated at a previous step 
+        - name: Download 2.txt file
+          uses: actions/download-artifact@v3
+          with:
+            name: 2.txt-file
+         
