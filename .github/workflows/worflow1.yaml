@@ -1,5 +1,11 @@
 name: worf1
-on: push
+#on:
+#   push:
+
+##manual run the workflow 
+on:
+   workflow_dispatch:
+
 jobs: 
     first_job:
         runs-on: ubuntu-latest
@@ -25,9 +31,23 @@ jobs:
         #needs command - will wait for successful execution of the mentiones step       
         needs: first_job   
         runs-on: ubuntu-latest
+        env:
+            NAME: tzahi
         steps:
         - name: print a welcome message
           run: echo "Second step" 
+         #env can be defined at the workflow , job or step level
+
+        - name: env at the step level 
+          #run: echo "$NAME"   // this is the same as the below
+          run: echo " ${{ env.NAME }} "
+
+        - name: retreive my secret from the repo level 
+          #run: echo "$NAME"   // this is the same as the below
+          run:  echo " ${{ secrets.MY_PASSWD }} "
+
+        - name: retreive y var from the repo level  
+          run:  echo " ${{ vars.MY_VAR }} "  
 
         # Download an artifact that was generated at a previous step 
         - name: Download 2.txt file
