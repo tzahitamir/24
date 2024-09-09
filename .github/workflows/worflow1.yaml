@@ -114,6 +114,6 @@ jobs:
       steps:
         - name: Dump job context
           env:
-            GITHUB_CONTEXT: ${{ toJson(job) }}
+            GITHUB_CONTEXT: ${{ toJson(github) }}
           run: echo "$GITHUB_CONTEXT"
       
