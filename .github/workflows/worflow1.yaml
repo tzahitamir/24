@@ -1,11 +1,25 @@
-name: worf1
-#on:
-#   push:
+name: wf1
 
-##manual run the workflow 
+# workflow_dispatch:
+# manual run the workflow 
 # manual trigger from github actions interface
 on:
-   workflow_dispatch:
+  workflow_dispatch:
+
+  #filter and ignore the following branches
+  #   branches-ignore: 
+  #     - feature/AA
+  #     - test7/*
+
+
+  #trigger on specific pr's and branch
+  pull_request:
+    types:
+      - opened
+      - closed
+    branches:
+      - main    
+
 
 jobs:    
     first_job:
@@ -82,6 +96,8 @@ jobs:
 
 #example of matrix:          
     deploy:
+      #if condition to run this deploy, github.ref is a context variable, this will check that the branch name is main
+      if: github.ref == 'refs/heads/main'
       strategy: 
         matrix:
           #fail-fast: true/false the true is default and will fail all running and pending jobs in case that one job fails
@@ -116,4 +132,11 @@ jobs:
           env:
             GITHUB_CONTEXT: ${{ toJson(github) }}
           run: echo "$GITHUB_CONTEXT"
+   #what triggered the flow       
+    trigger_point:
+      runs-on: ubuntu-latest
+      steps:
+        - name: show the trigger
+          run: echo The trigger was ${{ github.event_name}}
+
       
