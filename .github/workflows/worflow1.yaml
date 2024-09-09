@@ -85,12 +85,13 @@ jobs:
       strategy: 
         matrix:
           #fail-fast: true/false the true is default and will fail all running and pending jobs in case that one job fails
-          fail-fast: false
+        #  fail-fast: false
 
           #max-parallell - how many jobs to run n parallel 
           max-parallell: 2
 
-          os: [ ubuntu-latest, ubuntu-22.04 , windows-latest ]
+          #os: [ ubuntu-latest, ubuntu-22.04 , windows-latest ]
+          os: ubuntu-latest
           images: [busybox , alpine]
           exclude:
             - images: alpine
