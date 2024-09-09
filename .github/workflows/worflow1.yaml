@@ -74,11 +74,11 @@ jobs:
         - name: deploy on ubuntu
           run: docker info
 
-    deploy_on_windows:
-      runs-on: windows-latest
-      steps:
-        - name: deploy on windows
-          run: docker info  
+ #   deploy_on_windows:
+ #     runs-on: windows-latest
+ #     steps:
+ #       - name: deploy on windows
+ #         run: docker info  
 
 #example of matrix:          
     deploy:
