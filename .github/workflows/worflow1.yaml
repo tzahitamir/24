@@ -102,9 +102,9 @@ jobs:
           #    os: ubuntu-latest
 
         
-      runs-on: ${{ $matix.os }}    
+      runs-on: ${{ $matrix.os }}    
       steps:
-        - name: deploy on ${{ $matix.os }} 
+        - name: deploy on ${{ $matrix.os }} 
           run: docker info  
         - name: run on image
           run: docker run ${{matrix.images}}  
