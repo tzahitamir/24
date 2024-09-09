@@ -3,18 +3,22 @@ name: worf1
 #   push:
 
 ##manual run the workflow 
+# manual trigger from github actions interface
 on:
    workflow_dispatch:
 
-jobs: 
+jobs:    
     first_job:
         runs-on: ubuntu-latest
         steps:
+          
         - name: checkout repo
           uses: actions/checkout@v4      
         - name: print a welcome message
-          run: echo "Welcome to the first step"     
+          run: echo "Welcome to the first step"    
 
+        #timeout-minutes will terminate the step after the specified timeout           
+          timeout-minutes: 1
         - name: list files
           run: |
             ls
@@ -30,6 +34,15 @@ jobs:
     second_job: 
         #needs command - will wait for successful execution of the mentiones step       
         needs: first_job   
+
+        #concurrency defines what happens when the same job or workflow executes at the same time,
+        # in this case, the group of the job is named prod. when cancel-in-progress is true, it will cancel a job in progress, and put execute this one instead
+        # this is usefull in case such as you want to avoid running 2 deployments at the same time
+        #if cancel-in-progress: false , then execution will wait until the job in progress will be completed
+        concurrency: 
+          group: prod
+          cancel-in-progress: true
+
         runs-on: ubuntu-latest
         env:
             NAME: tzahi
@@ -54,4 +67,51 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: 2.txt-file
-         
+
+    deploy_on_linux:
+      runs-on: ubuntu-latest
+      steps:
+        - name: deploy on ubuntu
+          run: docker info
+
+    deploy_on_windows:
+      runs-on: windows-latest
+      steps:
+        - name: deploy on windows
+          run: docker info  
+
+#example of matrix:          
+    deploy:
+      strategy: 
+        matrix:
+          #fail-fast: true/false the true is default and will fail all running and pending jobs in case that one job fails
+          fail-fast: false
+
+          #max-parallell - how many jobs to run n parallel 
+          max-parallell: 2
+
+          os: [ ubuntu-latest, ubuntu-22.04 , windows-latest ]
+          images: [busybox , alpine]
+          exclude:
+            - images: alpine
+              os: windows-latest 
+          include:
+            - images: amd64/alpine
+              os: ubuntu-latest
+
+        
+      runs-on: ${{ $matix.os }}    
+      steps:
+        - name: deploy on ${{ $matix.os }} 
+          run: docker info  
+        - name: run on image
+          run: docker run ${{matrix.images}}  
+#context is the parameters / enviorment that the workflow is running with, all information is in documantation
+    dump_contexts_to_log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      
