@@ -94,10 +94,13 @@ jobs:
  #       - name: deploy on windows
  #         run: docker info  
 
-#example of matrix:          
+          
     deploy:
       #if condition to run this deploy, github.ref is a context variable, this will check that the branch name is main
       if: github.ref == 'refs/heads/main'
+
+      #example of matrix:
+      #matrix can be very good for unit testing and QA
       strategy: 
         matrix:
           #fail-fast: true/false the true is default and will fail all running and pending jobs in case that one job fails
