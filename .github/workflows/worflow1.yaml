@@ -44,6 +44,8 @@ jobs:
           with:
             name: 2.txt-file
             path: 2.txt
+            #optionally, set retention
+            retention-days: 3
 
     second_job: 
         #needs command - will wait for successful execution of the mentiones step       
